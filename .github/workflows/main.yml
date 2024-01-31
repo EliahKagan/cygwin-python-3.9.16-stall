@@ -34,6 +34,7 @@ jobs:
     env:
       CHERE_INVOKING: "1"
       CYGWIN_NOWINPATH: "1"
+      PYTHONUNBUFFERED: "1"
 
     defaults:
       run:
