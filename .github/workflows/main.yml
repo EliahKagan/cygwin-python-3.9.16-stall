@@ -30,6 +30,8 @@ jobs:
         - python-version: 3.9.18
           python-command: python3.9
           python-cygwin-package: python39
+        - system: windows
+          python-command: python
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -47,17 +49,22 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v4
 
-    - name: Set up Cygwin (with Python ${{ matrix.python-version }})
-      if: matrix.system == 'cygwin'
-      uses: egor-tensin/setup-cygwin@v4
-      with:
-        packages: ${{ matrix.python-cygwin-package }}=${{ matrix.python-version }}-1
-
-    - name: Set up Python ${{ matrix.python-version }}
-      if: matrix.system != 'cygwin'
+    - if: matrix.system == 'ubuntu' || matrix.system == 'macos'
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+
+    - if: matrix.system == 'windows'
+      uses: mamba-org/setup-micromamba@v1
+      with:
+        environment-name: test-env
+        create-args: python=${{ matrix.python-version }}
+        init-shell: powershell
+
+    - if: matrix.system == 'cygwin'
+      uses: egor-tensin/setup-cygwin@v4
+      with:
+        packages: ${{ matrix.python-cygwin-package }}=${{ matrix.python-version }}-1
 
     - name: Python info
       run: |
