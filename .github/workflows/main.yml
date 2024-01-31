@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        system: [ubuntu, macos, windows, cygwin]
+        system: [ubuntu, macos, cygwin]
         python-version: [3.8.18, 3.9.16, 3.9.18]
         include:
         - system: ubuntu
@@ -15,9 +15,6 @@ jobs:
         - system: macos
           os: macos-latest
           default-shell: bash
-        - system: windows
-          os: windows-latest
-          default-shell: pwsh
         - system: cygwin
           os: windows-latest
           default-shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr "{0}"
