@@ -61,4 +61,5 @@ jobs:
         ${{ matrix.python-command }} -c 'import os; print(f"{os.name = }")'
         ${{ matrix.python-command }} -c 'import sys; print(f"{sys.platform = }")'
 
-    # FIXME: Run the script here.
+    - name: Run experiment
+      run: ${{ matrix.python-command }} simple.py
