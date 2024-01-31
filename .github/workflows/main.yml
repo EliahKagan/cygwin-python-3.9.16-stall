@@ -1,0 +1,67 @@
+name: main
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        system: [ubuntu, macos, windows, cygwin]
+        python-version: [3.8.18, 3.9.16, 3.9.18]
+        include:
+        - system: ubuntu
+          os: ubuntu-latest
+          default-shell: bash
+        - system: macos
+          os: macos-latest
+          default-shell: bash
+        - system: windows
+          os: windows-latest
+          default-shell: pwsh
+        - system: cygwin
+          os: windows-latest
+          default-shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr "{0}"
+        - python-version: 3.8.18
+          python-command: python3.8
+          python-cygwin-package: python38
+        - python-version: 3.9.16
+          python-command: python3.9
+          python-cygwin-package: python39
+        - python-version: 3.9.18
+          python-command: python3.9
+          python-cygwin-package: python39
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      CHERE_INVOKING: "1"
+      CYGWIN_NOWINPATH: "1"
+
+    defaults:
+      run:
+        shell: ${{ matrix.default-shell }}
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Set up Cygwin (with Python ${{ matrix.python-version }})
+      if: matrix.system == 'cygwin'
+      uses: egor-tensin/setup-cygwin@v4
+      with:
+        packages: ${{ matrix.python-cygwin-package }}=${{ matrix.python-version }}-1
+
+    - name: Set up Python ${{ matrix.python-version }}
+      if: matrix.system != 'cygwin'
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Python info
+      run: |
+        ${{ matrix.python-command }} --version
+        ${{ matrix.python-command }} -c 'import os; print(f"{os.name = }")'
+        ${{ matrix.python-command }} -c 'import sys; print(f"{sys.platform = }")'
+
+    # FIXME: Run the script here.
