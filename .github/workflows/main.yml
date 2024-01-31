@@ -9,18 +9,6 @@ jobs:
         system: [ubuntu, macos, windows, cygwin]
         python-version: [3.8.18, 3.9.16, 3.9.18]
         include:
-        - system: ubuntu
-          os: ubuntu-latest
-          default-shell: bash
-        - system: macos
-          os: macos-latest
-          default-shell: bash
-        - system: windows
-          os: windows-latest
-          default-shell: pwsh
-        - system: cygwin
-          os: windows-latest
-          default-shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr "{0}"
         - python-version: 3.8.18
           python-command: python3.8
           python-cygwin-package: python38
@@ -30,8 +18,19 @@ jobs:
         - python-version: 3.9.18
           python-command: python3.9
           python-cygwin-package: python39
+        - system: ubuntu
+          os: ubuntu-latest
+          default-shell: bash
+        - system: macos
+          os: macos-latest
+          default-shell: bash
         - system: windows
+          os: windows-latest
+          default-shell: pwsh
           python-command: python
+        - system: cygwin
+          os: windows-latest
+          default-shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr "{0}"
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
