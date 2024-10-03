@@ -54,7 +54,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - if: matrix.system == 'windows'
-      uses: mamba-org/setup-micromamba@v1
+      uses: mamba-org/setup-micromamba@v2
       with:
         environment-name: test-env
         create-args: python=${{ matrix.python-version }}
